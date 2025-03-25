@@ -5,6 +5,7 @@ import MyTemplate from './components/MyTemplate.vue'
 
 <template>
   <MyTemplate />
+  <Routerview/>
 </template>
 
 <style scoped>
