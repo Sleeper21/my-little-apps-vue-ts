@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content-container">
     <MyNav />
     <main>
       <router-view />
@@ -17,7 +17,8 @@ const route = useRoute()
 
 <style scoped>
 .content-container {
-  height: 83vh;
+  height: 85vh;
+  margin: 0;
 }
 
 .custom-nav {
