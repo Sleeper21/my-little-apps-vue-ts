@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content-container flex items-center justify-center">
     To-Do App
   </div>
 </template>

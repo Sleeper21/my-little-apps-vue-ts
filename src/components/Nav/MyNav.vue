@@ -2,7 +2,9 @@
     
     <nav class="custom-nav flex justify-between items-center px-8 py-4 bg-gray-800 text-white shadow-sm">
       <div>
-        <a href='#'>My Apps</a>
+        <h1>
+          <RouterLink to="/">My Apps</RouterLink>
+        </h1>
       </div>
       <div>
         <ul class="flex gap-5 text-sm">
@@ -15,14 +17,30 @@
     </nav>
     <header class="sub-nav bg-gray-600 h-12">
       <ul class="flex justify-center items-center gap-5 text-sm text-white h-12">
-        <li><a href="">To-do App</a></li>
-        <li><a href="">Weather</a></li>
-        <li><a href="">Notes</a></li>
-        <li><a href="">Football News</a></li>
+        <li>
+          <RouterLink to="/todo" active-class="active text-gray-800">To-Do List</RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/weather" active-class="active text-gray-800">Weather</RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/notes" active-class="active text-gray-800">Notes</RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/news/football" active-class="active text-gray-800">Football News</RouterLink>
+        </li>
       </ul>
     </header>
 </template>
 
 <script setup>
-
+import { useRoute } from 'vue-router'
+const route = useRoute()
 </script>
+
+<style scoped>
+.active {
+  font-weight: bold;
+}
+
+</style>
