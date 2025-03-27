@@ -8,18 +8,34 @@
       </form>
     </div>
 
-    <div class="h-130 p-5 border-gray-400 rounded-lg shadow-2xl w-1/3">
+    <div class="h-130 p-2 border-gray-400 rounded-lg shadow-2xl w-1/3">
     <div>
       <ul v-if="tasks.length" class="task-ul">
         <li v-for="task in tasks" :key="task.id" class="task-li">
+
           <div class="flex items-center justify-between ">
-            <span class="task-text">
+            <span v-if="!task.isEditing" class="task-text">
               {{ task.title }}
             </span>
+
+            <input v-else type="text" id="task.id" v-model="newText" class="task-text">
+            
+
             <div class="flex gap-2">
-              <button class="bg-gray-300 rounded-lg px-4 text-base font-bold">Edit</button>
-              <button class="bg-red-300 rounded-lg px-4 text-base font-bold">Delete</button>
-            </div>
+              <button 
+                @click="() => handleEdit(task.id)"
+                class="bg-gray-300 rounded-lg px-4 text-base font-bold"
+              >
+                {{ task.isEditing ? 'Save' : 'Edit' }}
+              </button>
+              <button 
+                :v-bind="task.id"
+                class="bg-red-300 rounded-lg px-4 text-base font-bold"
+              >
+                Delete
+              </button>
+            </div>           
+
           </div>
         </li>
       </ul>
@@ -30,26 +46,48 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { reactive, ref, nextTick } from 'vue'
+
 import type { Task } from './types'
 
 const tasks: Task[] = reactive(JSON.parse(localStorage.getItem('tasks') || '[]'))
-
-//Globals
-let idCounter = 0
+const newText = ref('')
 
 const addNewTask = (event: Event) => {
   const input = new FormData(event.target as HTMLFormElement).get('todo') as string
   (event.target as HTMLFormElement).reset()
+
   const newTask: Task = {
-    id: idCounter++,
+    id: tasks.length,
     title: input,
-    completed: false
+    completed: false,
+    isEditing: false
   }
+
   tasks.push(newTask)
   localStorage.setItem('tasks', JSON.stringify(tasks))
 }
 
+function handleEdit(taskId: number) {
+  const taskIndex = tasks.findIndex(task => task.id === taskId)
+  const task = tasks[taskIndex]
+
+  if (task.isEditing) {
+    task.title = newText.value
+    saveTask(task)
+
+  } else {
+    newText.value = task.title
+    task.isEditing = true   
+  }
+  
+}
+
+function saveTask(task: Task) {
+  task.title = newText.value
+  task.isEditing = false
+  localStorage.setItem('tasks', JSON.stringify(tasks))
+}
 
 
 </script>
@@ -62,10 +100,6 @@ const addNewTask = (event: Event) => {
   background-color: #c7c9c72b;
 }
 
-ul.task-ul {
-  list-style-type: disc;
-}
-
 li.task-li {
   border-bottom: 1px solid #636363;
   border-radius: 5px;
@@ -76,12 +110,6 @@ li.task-li {
   font-weight: 500;
   padding: .3rem;
   border-radius: 5px; 
-}
-.task-text:hover {
-  background-color: #c3c3c336;
-  box-shadow: 0 1px 4px #636363;
-  cursor: pointer;
-  transition: ease-in .05s;
 }
 
 
